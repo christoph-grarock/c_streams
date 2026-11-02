@@ -6,7 +6,7 @@
 /*   By: cgrarock <cgrarock@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/27 14:09:03 by cgrarock          #+#    #+#             */
-/*   Updated: 2026/10/27 14:41:28 by cgrarock         ###   ########.fr       */
+/*   Updated: 2026/11/02 11:06:03 by cgrarock         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static void	*map_get_next(void *context)
 	t_map	*ctx;
 
 	ctx = (t_map *)context;
+	assert(map_has_next(ctx->source->context));
 	if (ctx->last_elem != NULL)
 		ctx->clear_mapper_elem(ctx->last_elem);
 	ctx->last_elem = ctx->mapper(ctx->source->get_next(ctx->source->context));
@@ -37,6 +38,7 @@ static void	map_destruct(void **context)
 	t_map	**ctx;
 
 	ctx = (t_map **)context;
+	(*ctx)->clear_mapper_elem((*ctx)->last_elem);
 	destruct_stream(&((*ctx)->source));
 	free(*ctx);
 	*ctx = NULL;

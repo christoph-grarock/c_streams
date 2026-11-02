@@ -6,7 +6,7 @@
 /*   By: cgrarock <cgrarock@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/22 15:49:55 by cgrarock          #+#    #+#             */
-/*   Updated: 2026/10/27 15:22:20 by cgrarock         ###   ########.fr       */
+/*   Updated: 2026/11/02 10:54:42 by cgrarock         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ typedef struct s_stream
 t_stream	*get_stream_template(void);
 t_stream	*create_array_stream(void *arr, size_t elem_size,
 				size_t elem_count);
-t_stream	*create_file_stream(int fd, size_t buf_size);
+t_stream	*create_file_stream(
+				int fd,
+				size_t buf_size,
+				void (*on_destruct)(int fd));
 void		destruct_stream(t_stream **stream);
 t_stream	*create_map_stream(t_stream *source, void *(*mapper)(void *),
 				void (*clear_mapper_elem)(void *));

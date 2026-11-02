@@ -6,7 +6,7 @@
 /*   By: cgrarock <cgrarock@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/27 13:55:05 by cgrarock          #+#    #+#             */
-/*   Updated: 2026/10/27 14:26:02 by cgrarock         ###   ########.fr       */
+/*   Updated: 2026/11/02 11:06:44 by cgrarock         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ static int	file_has_next(void *context)
 	t_file_context	*ctx;
 
 	ctx = (t_file_context *)context;
-	if (ctx == NULL)
-		return (0);
 	if (ctx->last_read == ctx->idx)
 	{
 		ctx->last_read = read(ctx->file_id, ctx->buffer, ctx->buffer_size);
@@ -34,8 +32,7 @@ static void	*file_get_next(void *context)
 	size_t			idx;
 
 	ctx = (t_file_context *)context;
-	if (ctx == NULL)
-		return (NULL);
+	assert(file_has_next(context));
 	idx = ctx->idx;
 	ctx->idx++;
 	return (ctx->buffer + idx);
@@ -46,12 +43,18 @@ static void	file_destruct(void **context)
 	t_file_context	**ctx;
 
 	ctx = (t_file_context **)context;
+	if ((*ctx)->on_destruct != NULL)
+		(*ctx)->on_destruct((*ctx)->file_id);
 	free((*ctx)->buffer);
 	free(*ctx);
 	*ctx = NULL;
 }
 
-static void	init_file_context(t_file_context **context, int fd, size_t buf_size)
+static void	init_file_context(
+				t_file_context **context,
+				int fd,
+				size_t buf_size,
+				void (*on_destruct)(int fd))
 {
 	*context = malloc(sizeof(t_file_context));
 	if (*context == NULL)
@@ -65,11 +68,15 @@ static void	init_file_context(t_file_context **context, int fd, size_t buf_size)
 	}
 	(*context)->file_id = fd;
 	(*context)->buffer_size = buf_size;
+	(*context)->on_destruct = on_destruct;
 	(*context)->last_read = 0;
 	(*context)->idx = 0;
 }
 
-t_stream	*create_file_stream(int fd, size_t buf_size)
+t_stream	*create_file_stream(
+				int fd,
+				size_t buf_size,
+				void (*on_destruct)(int fd))
 {
 	t_file_context	*context;
 	t_stream		*stream;
@@ -77,10 +84,9 @@ t_stream	*create_file_stream(int fd, size_t buf_size)
 	stream = get_stream_template();
 	if (stream == NULL)
 	{
-		free(stream);
 		return (NULL);
 	}
-	init_file_context(&context, fd, buf_size);
+	init_file_context(&context, fd, buf_size, on_destruct);
 	if (context == NULL)
 	{
 		free(stream);

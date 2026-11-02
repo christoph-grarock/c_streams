@@ -6,7 +6,7 @@
 /*   By: cgrarock <cgrarock@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 18:45:02 by cgrarock          #+#    #+#             */
-/*   Updated: 2026/10/27 14:32:30 by cgrarock         ###   ########.fr       */
+/*   Updated: 2026/11/02 11:09:44 by cgrarock         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static void	*take_get_next(void *context)
 	t_take_n	*ctx;
 
 	ctx = (t_take_n *)context;
+	assert(take_has_next(context));
 	if (ctx->idx < ctx->take)
 	{
 		ctx->idx++;

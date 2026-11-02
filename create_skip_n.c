@@ -6,7 +6,7 @@
 /*   By: cgrarock <cgrarock@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/22 15:53:25 by cgrarock          #+#    #+#             */
-/*   Updated: 2026/10/27 14:35:49 by cgrarock         ###   ########.fr       */
+/*   Updated: 2026/11/02 11:07:56 by cgrarock         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	*skip_get_next(void *context)
 
 	ctx = (t_skip_n *)context;
 	source = ctx->source;
-	assert(ctx->idx >= ctx->skip);
+	assert(skip_has_next(context));
 	ctx->idx++;
 	return (source->get_next(source->context));
 }

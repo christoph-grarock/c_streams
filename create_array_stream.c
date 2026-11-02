@@ -6,7 +6,7 @@
 /*   By: cgrarock <cgrarock@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/22 15:46:58 by cgrarock          #+#    #+#             */
-/*   Updated: 2026/10/27 14:33:02 by cgrarock         ###   ########.fr       */
+/*   Updated: 2026/11/02 11:05:44 by cgrarock         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ static void	*arr_get_next(void *context)
 	size_t			offset;
 
 	ctx = (t_arr_context *)context;
-	if (ctx == NULL)
-		return (NULL);
+	assert(arr_has_next(ctx));
 	offset = ctx->elem_size * ctx->current_idx;
 	ctx->current_idx += 1;
 	return ((void *)(((char *)ctx->backing_arr) + offset));
